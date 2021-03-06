@@ -61,7 +61,7 @@ class GoForward:
             # while(t0 + 5 >= rospy.get_rostime().secs):
             #     self.forward(0.2,0)
             # #	r.sleep()
-            while(t0 + 30 >= rospy.get_rostime().secs):
+            while(t0 + 300 >= rospy.get_rostime().secs):
                 self.move_circle()
             # self.move_circle()
             break
