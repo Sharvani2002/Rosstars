@@ -1,0 +1,7 @@
+<launch>
+
+  <node pkg="embedathon2021" type="turtlesim_node" name="node_turtlesim_node"/>
+
+  <node name="turtle_go" pkg="robogo" type="turtle_go.py" output="screen"/>
+   
+</launch>
