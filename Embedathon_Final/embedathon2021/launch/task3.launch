@@ -17,14 +17,12 @@
     <arg name="debug" value="$(arg debug)"/>
   </include>
 
-  <!-- <arg name="x" default="2.61692209403"/>
-	<arg name="y" default="2.26485797848"/> -->
-     <arg name="x" default="-3.5"/>
+  <arg name="x" default="0"/>
 	<arg name="y" default="0"/>
 	<arg name="z" default="0.5"/>
 	<arg name="r" default="0"/>
 	<arg name="p" default="0"/>
-	<arg name="ya" default="-1.57079632"/>
+	<arg name="ya" default="0"/>
 
 <!-- turtle bot -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find embedathon2021)/urdf/turtlebot3_waffle_pi.urdf.xacro'"/>
