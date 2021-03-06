@@ -1,102 +1,109 @@
 #!/usr/bin/env python
-# A very basic TurtleBot script that moves TurtleBot forward indefinitely. Press CTRL + C to stop.  To run:
-# On TurtleBot:
-# roslaunch turtlebot_bringup minimal.launch
-# On work station:
-# python move.py
-
-import rospy
+import rospy # Python library for ROS
+from sensor_msgs.msg import LaserScan #import library for lidar sensor
+from nav_msgs.msg import Odometry #import library for position and orientation data
 from geometry_msgs.msg import Twist
 from gazebo_msgs.msg import ModelStates
-class Move_path:
-
-    def forward(self,x,y,w):
-        rospy.loginfo("Moving - lin : {} ang : {}".format(lin,ang))
-        # Twist is a datatype for velocity
-        move_cmd = Twist()
-	    # let's go forward 
-        move_cmd.linear.x = x
-        move_cmd.linear.y = y
-	    # let's turns
-        move_cmd.angular.z = w
-	    # publish the velocity
-        self.cmd_vel.publish(move_cmd)
-
-    def pose_callback(self, msg):
-        self.x = msg.pose[2].position.x
-        self.y = msg.pose[2].position.y
-        self.z = msg.pose[2].position.z
-        rospy.loginfo("Position: %f,%f,%f",self.x,self.y,self.z)
 
 
-    def move_circle(self, radius=3.5):
-        move_cmd = Twist()
-	    # let's go forward 
-        move_cmd.linear.x = 1.05
-	    # let's turns
-        move_cmd.angular.z = 0.3
-	    # publish the velocity
-        self.cmd_vel.publish(move_cmd)
+class Circling(): #main class
+   
+    def __init__(self): #main function
+        global circle
+        circle = Twist() #create object of twist type  
+        self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10) #publish message
+        self.sub = rospy.Subscriber("/scan", LaserScan, self.callback) #subscribe message 
+        self.sub = rospy.Subscriber("/odom", Odometry, self.odometry) #subscribe message
 
-    def __init__(self):
-        rospy.init_node('GoForward', anonymous=False)
+    def callback(self, msg): #function for obstacle avoidance
+        print '-------RECEIVING LIDAR SENSOR DATA-------'
+        print 'Front: {}'.format(msg.ranges[0]) #lidar data for front side
+        print 'Left:  {}'.format(msg.ranges[90]) #lidar data for left side
+        print 'Right: {}'.format(msg.ranges[270]) #lidar data for right side
+        print 'Back: {}'.format(msg.ranges[180]) #lidar data for back side
+      
+      	#Obstacle Avoidance
+        self.distance = 0.7
+        if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance: 
+        #when no any obstacle near detected
+            circle.linear.x = 0.5 # go (linear velocity)
+            circle.angular.z = 0.1 # rotate (angular velocity)
+            rospy.loginfo("Circling") #state situation constantly
+        else: #when an obstacle near detected
+            rospy.loginfo("An Obstacle Near Detected") #state case of detection
+            circle.linear.x = 0.0 # stop
+            circle.angular.z = 0.5 # rotate counter-clockwise
+            if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance and msg.ranges[45] > self.distance and msg.ranges[315] > self.distance:
+                #when no any obstacle near detected after rotation
+                circle.linear.x = 0.5 #go
+                circle.angular.z = 0.1 #rotate
+        self.pub.publish(circle) # publish the move object
 
-	    # tell user how to stop TurtleBot
-        rospy.loginfo("To stop TurtleBot CTRL + C")
-        # What function to call when you ctrl + c    
-        rospy.on_shutdown(self.shutdown)
+    def odometry(self, msg): #function for odometry
+        print msg.pose.pose #print position and orientation of turtlebot
 
-        rospy.Subscriber("/gazebo/model_states", ModelStates, self.pose_callback)
-        rospy.Subscriber("/odom", ModelStates, self.pose_callback)
-        rospy.Subscriber("/gazebo/model_states", ModelStates, self.pose_callback)
-
-        self.cmd_vel = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-    
-        r = rospy.Rate(10)
-	
-
-        while not rospy.is_shutdown():
-            # # Move forward at 1 for 1 sec
-            t0 = rospy.get_rostime().secs
-
-            ########################################
-            #Change the code from here
-
-
-            #distance in x direction
-            dist_x =0 ##calculate desired total distance in x direction
-
-            # while(t0 + 300 >= rospy.get_rostime().secs):
-
-            #9 is the original or initial position
-            while(abs(self.x-9) <= dist_x):
-                
-
-                self.forward(x,y,w)
-                #One sol to the riddle: a=2,b=0,c=1
-
-                #sin(x*2)*sin(x/2)*e^(-b.bc)
-
-                #Update the velocities accordingly...
-                x = 1#update x
-                # y = 1#update y
-                # w = 1#update angular vel
-
-            
-            #########################################
-            break
-        self.shutdown()
-        # break
-                            
-        
-    def shutdown(self):
-        rospy.loginfo("Stop TurtleBot")
-        self.cmd_vel.publish(Twist())
-        rospy.sleep(1)
- 
 if __name__ == '__main__':
-    try:
-        move = Move_path()
-	
-    except:
-        rospy.loginfo("GoForward node terminated.")
+    rospy.init_node('obstacle_avoidance_node') #initilize node
+    Circling() #run class
+    rospy.spin() #loop it#!/usr/bin/env python
+import rospy # Python library for ROS
+from sensor_msgs.msg import LaserScan #import library for lidar sensor
+from nav_msgs.msg import Odometry #import library for position and orientation data
+
+class Circling(): #main class
+   
+    def __init__(self): #main function
+        global circle
+        circle = Twist() #create object of twist type  
+        self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10) #publish message
+        self.sub = rospy.Subscriber("/scan", LaserScan, self.callback) #subscribe message 
+        self.sub = rospy.Subscriber("/odom", Odometry, self.odometry) #subscribe message
+
+    def callback(self, msg): #function for obstacle avoidance
+        print '-------RECEIVING LIDAR SENSOR DATA-------'
+        print 'Front: {}'.format(msg.ranges[0]) #lidar data for front side
+        print 'Left:  {}'.format(msg.ranges[90]) #lidar data for left side
+        print 'Right: {}'.format(msg.ranges[270]) #lidar data for right side
+        print 'Back: {}'.format(msg.ranges[180]) #lidar data for back side
+      
+      	#Obstacle Avoidance
+        # self.distance = 0.7
+        # if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance: 
+        # #when no any obstacle near detected
+        #     circle.linear.x = 0.5 # go (linear velocity)
+        #     circle.angular.z = 0.1 # rotate (angular velocity)
+        #     rospy.loginfo("Circling") #state situation constantly
+        # else: #when an obstacle near detected
+        #     rospy.loginfo("An Obstacle Near Detected") #state case of detection
+        #     circle.linear.x = 0.0 # stop
+        #     circle.angular.z = 0.5 # rotate counter-clockwise
+        #     if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance and msg.ranges[45] > self.distance and msg.ranges[315] > self.distance:
+        #         #when no any obstacle near detected after rotation
+        #         circle.linear.x = 0.5 #go
+        #         circle.angular.z = 0.1 #rotate
+
+
+        self.distance = 0.7
+        if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance: 
+        #when no any obstacle near detected
+            circle.linear.x = 0.5 # go (linear velocity)
+            # circle.angular.z = 0.1 # rotate (angular velocity)
+            rospy.loginfo("Circling") #state situation constantly
+        else: #when an obstacle near detected
+            rospy.loginfo("An Obstacle Near Detected") #state case of detection
+            circle.linear.x = 0.0 # stop
+            circle.angular.z = 0.5 # rotate counter-clockwise
+            if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance and msg.ranges[45] > self.distance and msg.ranges[315] > self.distance:
+                #when no any obstacle near detected after rotation
+                circle.linear.x = 0.5 #go
+                # circle.angular.z = 0.1 #rotate
+
+        self.pub.publish(circle) # publish the move object
+
+    def odometry(self, msg): #function for odometry
+        print msg.pose.pose #print position and orientation of turtlebot
+
+if __name__ == '__main__':
+    rospy.init_node('obstacle_avoidance_node') #initilize node
+    Circling() #run class
+    rospy.spin() #loop it

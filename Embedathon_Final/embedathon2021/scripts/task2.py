@@ -8,10 +8,12 @@
 import rospy
 from geometry_msgs.msg import Twist
 from gazebo_msgs.msg import ModelStates
+import math
+
 class Move_path:
 
     def forward(self,x,y,w):
-        rospy.loginfo("Moving - lin : {} ang : {}".format(lin,ang))
+        # rospy.loginfo("Moving - lin : {} ang : {}".format(lin,ang))
         # Twist is a datatype for velocity
         move_cmd = Twist()
 	    # let's go forward 
@@ -28,15 +30,6 @@ class Move_path:
         self.z = msg.pose[2].position.z
         rospy.loginfo("Position: %f,%f,%f",self.x,self.y,self.z)
 
-
-    def move_circle(self, radius=3.5):
-        move_cmd = Twist()
-	    # let's go forward 
-        move_cmd.linear.x = 1.05
-	    # let's turns
-        move_cmd.angular.z = 0.3
-	    # publish the velocity
-        self.cmd_vel.publish(move_cmd)
 
     def __init__(self):
         # initiliaze
@@ -56,6 +49,9 @@ class Move_path:
      
 	    #TurtleBot will stop if we don't keep telling it to move.  How often should we tell it to move? 10 HZ
         r = rospy.Rate(10)
+        self.x =9
+        self.y =0
+        self.z =0 
 	
 
         while not rospy.is_shutdown():
@@ -67,22 +63,27 @@ class Move_path:
 
 
             #distance in x direction
-            dist_x =0 ##calculate desired total distance in x direction
+            dist_x =6 ##calculate desired total distance in x direction
 
             # while(t0 + 300 >= rospy.get_rostime().secs):
 
             #9 is the original or initial position
             while(abs(self.x-9) <= dist_x):
                 
+                x = 0.1
+                w = 0
+                y = (2*math.cos(2*(self.x-9))*math.sin((self.x-9)/2) + 0.5*math.sin(2*(self.x-9))*math.cos((self.x-9)/2))
+                # y =0
 
                 self.forward(x,y,w)
                 #One sol to the riddle: a=2,b=0,c=1
 
-                #sin(x*2)*sin(x/2)*e^(-b.bc)
+                #sin(x*2)*sin(x/2)
 
                 #Update the velocities accordingly...
-                x = 1#update x
+                # x = 1#update x
                 # y = 1#update y
+                
                 # w = 1#update angular vel
 
             

@@ -23,9 +23,9 @@ class GoForward:
     def move_circle(self, radius=3.5):
         move_cmd = Twist()
 	    # let's go forward 
-        move_cmd.linear.x = 1.05
+        move_cmd.linear.x = 0.35
 	    # let's turns
-        move_cmd.angular.z = 0.3
+        move_cmd.angular.z = 0.1
 	    # publish the velocity
         self.cmd_vel.publish(move_cmd)
 
