@@ -24,23 +24,30 @@ $rosrun embedathon2021 task2.py
 
 
 ### Task#3:
-Youtube link:
-- 3.1: https://youtu.be/es892odM_Xo
+- 3.1: 
+ Youtube link: 
+ https://youtu.be/es892odM_Xo
+  
   To check this task, run these:
 ```
 $roslaunch embedathon2021 task3.launch
 $rosrun rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 ```
 
-- 3.2.1: https://youtu.be/hC0Ad-ikhnc
-    To check this task, run these:
+- 3.2.1: 
+ Youtube link: 
+ https://youtu.be/hC0Ad-ikhnc
+  
+  To check this task, run these:
 ```
 $roslaunch embedathon2021 temp.launch
 $rosrun rosrun embedathon2021 task3-subtask1.py
 ```
 
 - 3.2.2: https://youtu.be/o9VWxZO8c6Y
-  To check this task, there are 2 ways we tried:
+
+   To check this task, there are 2 ways we tried:
+  
   - Method 1
     ```
     $roslaunch embedathon2021 task3.launch
@@ -51,4 +58,13 @@ $rosrun rosrun embedathon2021 task3-subtask1.py
     $roslaunch embedathon2021 task3.launch
     $roslaunch embedathon2021 bug2.launch
     ```
-
+- To integrate 3.2.1 and 3.2.2 (Method 1):
+   - comment `self.shutdown()` and other statements that cause break in loop in task3-subtask1.py file
+   - copy the libraries and class from task3.py to task3-subtask1.py
+   - copy the line `self.sub1 = rospy.Subscriber("/scan", LaserScan, self.callback)` from __init__ in task3.py to task3-subtask1.py
+   - Copy these lines from main() of task3.py to main of task3-subtask1.py file
+     ```
+      rclass = Moving() 
+      rclass.linear_vel = 0.1
+      rclass.go_to_goal(-25)
+      ```
