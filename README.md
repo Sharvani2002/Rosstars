@@ -1,6 +1,6 @@
 # Rosstars
 
-Before running the tasks ensure that all the files in the `Scripts` folder are executable:
+Before running the tasks ensure that all the files in the `scripts` folder are executable:
 `$chmod +x *` 
 Also use `catkin_make` to build the packages and source setup the workspace after that
 
@@ -62,6 +62,9 @@ $rosrun rosrun embedathon2021 task3-subtask1.py
     $roslaunch embedathon2021 task3.launch
     $roslaunch embedathon2021 bug2.launch
     ```
+    The python files used in this method are: 
+    `bug_algo_2.py` , `follow_wall.py` and `go_to_point.py`
+    
 - To integrate 3.2.1 and 3.2.2 (Method 1):
    - comment `self.shutdown()` and other statements that cause break in loop in task3-subtask1.py file
    - copy the libraries and class from task3.py to task3-subtask1.py
@@ -72,3 +75,4 @@ $rosrun rosrun embedathon2021 task3-subtask1.py
       rclass.linear_vel = 0.1
       rclass.go_to_goal(-25)
       ```
+- NOTE: Task 3.3 can be done using 3.2.2 (Method 1 or 2), but the initial and final destination points need to be changed
