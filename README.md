@@ -35,7 +35,7 @@ $rosrun embedathon2021 task2.py
   To check this task, run these:
 ```
 $roslaunch embedathon2021 task3.launch
-$rosrun rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+$rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 ```
 
 - 3.2.1: 
@@ -45,7 +45,7 @@ $rosrun rosrun teleop_twist_keyboard teleop_twist_keyboard.py
   To check this task, run these:
 ```
 $roslaunch embedathon2021 temp.launch
-$rosrun rosrun embedathon2021 task3-subtask1.py
+$rosrun embedathon2021 task3-subtask1.py
 ```
 
 - 3.2.2: https://youtu.be/o9VWxZO8c6Y
@@ -55,7 +55,7 @@ $rosrun rosrun embedathon2021 task3-subtask1.py
   - Method 1
     ```
     $roslaunch embedathon2021 task3.launch
-    $rosrun rosrun embedathon2021 task3.py
+    $rosrun embedathon2021 task3.py
     ```
   - Method 2
     ```
