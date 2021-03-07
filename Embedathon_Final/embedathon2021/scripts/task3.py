@@ -35,14 +35,14 @@ class Moving():
 
         global regions
         regions = {
-            'bright':  min(min(msg.ranges[0:71]), 10),
-            'fright': min(min(msg.ranges[72:143]), 10),
-            'front':  min(min(msg.ranges[144:215]), 10),
-            'fleft':  min(min(msg.ranges[216:287]), 10),
-            'bleft':   min(min(msg.ranges[288:359]), 10),
+            'bright':  min(min(msg.ranges[0:71]), 2),
+            'fright': min(min(msg.ranges[72:143]), 2),
+            'front':  min(min(msg.ranges[144:215]), 2),
+            'fleft':  min(min(msg.ranges[216:287]), 2),
+            'bleft':   min(min(msg.ranges[288:359]), 2),
         }
 
-        wall_state_check()
+        # wall_state_check()
         # this is a way to handle laser call back, here msg has 720, but remember our bot has 360, you could also add extra functions
         #  with a call so that it can get updated continuously
         #Go to a goal taking care of obstale avoidance(using states obtained) given the x coordinate

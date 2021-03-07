@@ -8,7 +8,7 @@
       <uri>model://sun</uri>
     </include>
       <include>
-      <uri>model://arena_task1_2</uri>
+      <uri>model://arena_task4</uri>
       <pose>0.0 0 -0.1 0 0 0</pose>
     </include>
   </world>

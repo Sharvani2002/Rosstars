@@ -37,11 +37,11 @@ def wall_follower_switch(req):
 def clbk_laser(msg):
     global regions_
     regions_ = {
-        'bright':  min(min(msg.ranges[0:71]), 10),
-        'fright': min(min(msg.ranges[72:143]), 10),
-        'front':  min(min(msg.ranges[144:215]), 10),
-        'fleft':  min(min(msg.ranges[216:287]), 10),
-        'bleft':   min(min(msg.ranges[288:359]), 10),
+        'bright':  min(min(msg.ranges[0:71]), 2),
+        'fright': min(min(msg.ranges[72:143]), 2),
+        'front':  min(min(msg.ranges[144:215]), 2),
+        'fleft':  min(min(msg.ranges[216:287]), 2),
+        'bleft':   min(min(msg.ranges[288:359]), 2),
     }
 
     take_action()

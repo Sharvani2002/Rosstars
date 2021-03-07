@@ -74,11 +74,11 @@ def clbk_laser(msg):
 
     global regions_
     regions_ = {
-        'bright':  min(min(msg.ranges[0:71]), 10),
-        'fright': min(min(msg.ranges[72:143]), 10),
-        'front':  min(min(msg.ranges[144:215]), 10),
-        'fleft':  min(min(msg.ranges[216:287]), 10),
-        'bleft':   min(min(msg.ranges[288:359]), 10),
+        'bright':  min(min(msg.ranges[0:71]), 2),
+        'fright': min(min(msg.ranges[72:143]), 2),
+        'front':  min(min(msg.ranges[144:215]), 2),
+        'fleft':  min(min(msg.ranges[216:287]), 2),
+        'bleft':   min(min(msg.ranges[288:359]), 2),
     }
  
 
@@ -147,7 +147,7 @@ def main():
 
     # set robot position
     model_state = ModelState()
-    model_state.model_name = 'arena_task3' #'m2wr'
+    model_state.model_name = 'turtlebot3_waffle_pi'#'mybot_spawn'#'#.._sim' #arena_task3 #'m2wr'
     model_state.pose.position.x = initial_position_.x
     model_state.pose.position.y = initial_position_.y
     resp = srv_client_set_model_state(model_state)
