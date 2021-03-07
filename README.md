@@ -1,5 +1,9 @@
 # Rosstars
 
+Before running the tasks ensure that all the files in the `Scripts` folder are executable:
+`$chmod +x *` 
+Also use `catkin_make` to build the packages and source setup the workspace after that
+
 ## Tasks completed:
 
 ### Task#1:
@@ -62,7 +66,7 @@ $rosrun rosrun embedathon2021 task3-subtask1.py
    - comment `self.shutdown()` and other statements that cause break in loop in task3-subtask1.py file
    - copy the libraries and class from task3.py to task3-subtask1.py
    - copy the line `self.sub1 = rospy.Subscriber("/scan", LaserScan, self.callback)` from __init__ in task3.py to task3-subtask1.py
-   - Copy these lines from main() of task3.py to main of task3-subtask1.py file
+   - Copy these lines from main of task3.py to main of task3-subtask1.py file
      ```
       rclass = Moving() 
       rclass.linear_vel = 0.1
