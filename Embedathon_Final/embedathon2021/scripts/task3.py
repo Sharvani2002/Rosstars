@@ -24,6 +24,7 @@ class Moving():
         self.state= 0
         self.invert =1
         self.linear_vel = 0
+        self.iter_state1 =0
 
     def callback(self, msg): #function for obstacle avoidance
         print '-------RECEIVING LIDAR SENSOR DATA-------'
@@ -33,7 +34,7 @@ class Moving():
         print 'Back: {}'.format(msg.ranges[180]) #lidar data for back side
       
       	#Obstacle Avoidance distance
-        self.distance = 0.01
+        self.distance = 0.05
         '''
         Updates states as follows:
         0: if everything is fine
@@ -52,11 +53,18 @@ class Moving():
         #     if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance and msg.ranges[45] > self.distance and msg.ranges[315] > self.distance:
         #         #when no any obstacle near detected after rotation
         #         self.state= 2
+        if msg.ranges[0] > 0.5 and msg.ranges[15] > 0.5 and msg.ranges[345] > 0.5: 
+            #when no any obstacle near detected even far away
+            self.state = 10#very safe
+        
+        if msg.ranges[0] > 3 and msg.ranges[15] > 3 and msg.ranges[345] > 3: 
+            #when no any obstacle near detected even faaaar away
+            self.state = 100#extremely safe
 
-
-        if (msg.ranges[0] <= self.distance and msg.ranges[15] <= self.distance and msg.ranges[345] <= self.distance):
+        elif (msg.ranges[0] <= self.distance and msg.ranges[15] <= self.distance and msg.ranges[345] <= self.distance):
             rospy.loginfo("An Obstacle Near Detected")
             self.state = 1
+            self.iter_state1+=1
 
             if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance and msg.ranges[45] > self.distance and msg.ranges[315] > self.distance:
                 #when no any obstacle near detected after rotation
@@ -90,12 +98,47 @@ class Moving():
                 else:
                     speed.linear.x = 0.5
                     speed.angular.z = 0.0
+            #move a bit faster
+            if (self.state ==10):
+                if abs(angle_to_goal - self.odom_theta) > 0.1:
+                    speed.linear.x = 0.0
+                    speed.angular.z = 0.3
+                else:
+                    speed.linear.x = 0.8
+                    speed.angular.z = 0.0
+            #move very fast
+            if (self.state ==100):
+                if abs(angle_to_goal - self.odom_theta) > 0.1:
+                    speed.linear.x = 0.0
+                    speed.angular.z = 0.3
+                else:
+                    speed.linear.x = 1
+                    speed.angular.z = 0.0
 
-            if (self.state==1):
-                self.invert = -self.invert
-                speed.angular.z = 0.5*self.invert
+            
+            if (self.state==1 and self.iter_state1 < 10):
+                # self.invert = -self.invert
+                # speed.angular.z = 0.5*self.invert
+                if abs(angle_to_goal - self.odom_theta) > 0.5:
+                    speed.angular.z = 0.3
+                else:
+                    speed.angular.z = 0.1
+
                 speed.linear.x = 0
                 speed.linear.y = 0
+
+            #if after rotating many times it is not able to 
+            #move in an angle directed to the goal
+            #Thne move in the direction where there is less obstacle
+            if(self.state==1 and self.iter_state1 >= 10):
+                speed.angular.z = 0.1
+                speed.linear.x = 0
+                speed.linear.y = 0
+
+                if (self.state==0 or self.state ==10 or self.state ==100):
+                    speed.linear.x = 0.2
+                    self.iter_state1 = 0
+
 
             #Stop when the goal is reached
             if (abs(inc_x)<0.5 and abs(inc_y)<0.5):
