@@ -32,7 +32,21 @@ class Moving():
         print 'Left:  {}'.format(msg.ranges[90]) #lidar data for left side
         print 'Right: {}'.format(msg.ranges[270]) #lidar data for right side
         print 'Back: {}'.format(msg.ranges[180]) #lidar data for back side
-      
+
+        global regions
+        regions = {
+            'bright':  min(min(msg.ranges[0:71]), 10),
+            'fright': min(min(msg.ranges[72:143]), 10),
+            'front':  min(min(msg.ranges[144:215]), 10),
+            'fleft':  min(min(msg.ranges[216:287]), 10),
+            'bleft':   min(min(msg.ranges[288:359]), 10),
+        }
+
+        wall_state_check()
+        # this is a way to handle laser call back, here msg has 720, but remember our bot has 360, you could also add extra functions
+        #  with a call so that it can get updated continuously
+        #Go to a goal taking care of obstale avoidance(using states obtained) given the x coordinate
+        
       	#Obstacle Avoidance distance
         self.distance = 0.05
         '''
@@ -42,17 +56,6 @@ class Moving():
         2: if it detects no obtacle after detecting an obstacle previously(in same loop)
         '''    
 
-        # if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance: 
-        #     #when no any obstacle near detected
-        #     self.state = 0
-
-        # else: #when an obstacle near detected
-        #     rospy.loginfo("An Obstacle Near Detected") #state case of detection
-        #     self.state = 1
-
-        #     if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance and msg.ranges[45] > self.distance and msg.ranges[315] > self.distance:
-        #         #when no any obstacle near detected after rotation
-        #         self.state= 2
         if msg.ranges[0] > 0.5 and msg.ranges[15] > 0.5 and msg.ranges[345] > 0.5: 
             #when no any obstacle near detected even far away
             self.state = 10#very safe
@@ -72,10 +75,13 @@ class Moving():
 
         else:
             self.state =0 
-        
+    
 
-        
-    #Go to a goal taking care of obstale avoidance(using states obtained) given the x coordinate
+ 
+
+
+
+
     def go_to_goal(self, given_x):
 
         speed = Twist()
