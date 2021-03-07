@@ -70,9 +70,12 @@ class Move_path:
             #9 is the original or initial position
             while(abs(self.x-9) <= dist_x):
                 
-                x = 0.1
+		v = 0.1
+		d = (2.5 * math.sin(5 * (self.x - 9) / 2) - 1.5 * math.sin(1.5 * (self.x - 9) / 2)) / 2 
+                x = v * d/ (math.sqrt(1 + d * d))
+		y = v / (math.sqrt(1 + d * d))
                 w = 0
-                y = (2*math.cos(2*(self.x-9))*math.sin((self.x-9)/2) + 0.5*math.sin(2*(self.x-9))*math.cos((self.x-9)/2))
+               #y = (2*math.cos(2*(self.x-9))*math.sin((self.x-9)/2) + 0.5*math.sin(2*(self.x-9))*math.cos((self.x-9)/2))
                 # y =0
 
                 self.forward(x,y,w)
